@@ -5,7 +5,6 @@
 import pandas as pd
 from scipy import stats
 import sys
-import plotly
 import matplotlib.pyplot as plt
 
 # Importacao dos dados da base de dados de vendas (Base 10) - Etapa 1 - Coleta de Dados
@@ -16,7 +15,7 @@ Arquivo = '/home/gabriel/Documents/FolderProgamacao/Repositorio/GabrielHVitusso-
 
 # Isso da a capacidade de se selecionar uma base de dados especifica
 Nome = "Base"
-i = 1
+i = 10
 i = str(i)
 Nome = Nome + i
 
@@ -90,20 +89,28 @@ print(df_resultados)
 
 # Visualizacao dos dados
 
-# Grafico de Dispersao e Correlacao
-
-# Selecionar dois produtos para o gráfico de dispersão
-produto_x = nomes[2]  # Produto para o eixo x
-produto_y = nomes[3]  # Produto para o eixo y
-
-# Criar o gráfico de dispersão
-fig = plotly.scatter(
-    df,
-    x=produto_x,
-    y=produto_y,
-    title=f"Gráfico de Dispersão: {produto_x} vs {produto_y}",
-    labels={produto_x: "Eixo X", produto_y: "Eixo Y"},
-)
-
-# Exibir o gráfico
-fig.show()
+# Gráfico de dispersão com base em nomes de produtos fornecidos pelo usuário
+while True:
+    produto1 = input("INSERIR PRIMEIRO PRODUTO: ").strip()
+    if produto1.lower() == 'sair':
+        break
+    produto2 = input("INSERIR SEGUNDO PRODUTO: ").strip()
+    
+    # Verifica se a combinação de produtos existe em 'correlacoes'
+    correl = None
+    for correlacao in correlacoes:
+        if (correlacao[0] == produto1 and correlacao[1] == produto2) or (correlacao[0] == produto2 and correlacao[1] == produto1):
+            correl = correlacao
+            break
+    
+    if correl:
+        _, _, valor_correlacao = correl
+        plt.figure(figsize=(8, 6))
+        plt.scatter(df[produto1], df[produto2], alpha=0.9)
+        plt.title(f"Dispersão entre {produto1} e {produto2} (Correlação: {valor_correlacao:.4f})")
+        plt.xlabel(produto1)
+        plt.ylabel(produto2)
+        plt.grid(True)
+        plt.show()
+    else:
+        print("Não existe essa correlação")
