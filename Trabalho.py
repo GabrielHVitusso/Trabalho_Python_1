@@ -4,6 +4,8 @@
 #Bibliotecas
 import pandas as pd
 from scipy import stats
+import sys
+import plotly
 import matplotlib.pyplot as plt
 
 # Importacao dos dados da base de dados de vendas (Base 10) - Etapa 1 - Coleta de Dados
@@ -14,7 +16,7 @@ Arquivo = '/home/gabriel/Documents/FolderProgamacao/Repositorio/GabrielHVitusso-
 
 # Isso da a capacidade de se selecionar uma base de dados especifica
 Nome = "Base"
-i = 10
+i = 1
 i = str(i)
 Nome = Nome + i
 
@@ -47,6 +49,7 @@ while Produtos:
     for outro_item in Produtos:
         correlacao = df[item].corr(df[outro_item])
         correlacoes.append([item, outro_item, correlacao])
+
 
 print(correlacoes)
 
@@ -86,3 +89,21 @@ df_resultados = pd.DataFrame(matriz_de_resultados, columns=colunas)
 print(df_resultados)
 
 # Visualizacao dos dados
+
+# Grafico de Dispersao e Correlacao
+
+# Selecionar dois produtos para o gráfico de dispersão
+produto_x = nomes[2]  # Produto para o eixo x
+produto_y = nomes[3]  # Produto para o eixo y
+
+# Criar o gráfico de dispersão
+fig = plotly.scatter(
+    df,
+    x=produto_x,
+    y=produto_y,
+    title=f"Gráfico de Dispersão: {produto_x} vs {produto_y}",
+    labels={produto_x: "Eixo X", produto_y: "Eixo Y"},
+)
+
+# Exibir o gráfico
+fig.show()
