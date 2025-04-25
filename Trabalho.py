@@ -15,7 +15,7 @@ Arquivo = './Dados/Base.xlsx'
 
 # Isso da a capacidade de se selecionar uma base de dados especifica
 Nome = "Base"
-i = 8
+i = 10
 i = str(i)
 Nome = Nome + i
 
@@ -24,10 +24,10 @@ df = pd.read_excel(Arquivo, sheet_name=Nome, header = None)  # A base escolhida 
 # Limpeza de dados
 
 # Cria-se um dicionario com o nome de cada produto salvo para cada coluna, além disso, se o nome do produto tiver um espaço à direita, esse espaço eh removido
-dados = {df.iloc[0, col].strip(): df.iloc[1:, col].dropna().tolist() for col in range(df.shape[1])}
+dados = {df.iloc[0, col].strip(): df.iloc[1:, col].dropna().tolist() for col in range(df.shape[1])} # Cria um dicionario com o nome de cada produto e suas respectivas vendas
 
 # Criação de um vetor que salva o nome de cada produto
-nomes = [df.iloc[0, col].strip() for col in range(df.shape[1])]
+nomes = [df.iloc[0, col].strip() for col in range(df.shape[1])] # Cria um vetor com o nome de cada produto, sem os espaços à direita
 # Esse dicionario eh salvo como data frame, para que as manipulacoes de dados sejam feitas corretamente
 df = pd.DataFrame(dados)
 
@@ -43,20 +43,23 @@ Produtos = nomes[2:]
 # Correlacoes
 correlacoes = []
 
-while Produtos:
-    item = Produtos.pop(0)
+while Produtos: # Enquanto houver produtos na lista
+    item = Produtos.pop(0) # Remove o primeiro produto da lista
     for outro_item in Produtos:
-        correlacao = df[item].corr(df[outro_item])
-        correlacoes.append([item, outro_item, correlacao])
+        correlacao = df[item].corr(df[outro_item])# Calcula a correlação entre os dois produtos
+        correlacoes.append([item, outro_item, correlacao])# Adiciona a correlação à lista
+
+# Transformar as correlações em um DataFrame
+df_correlacoes = pd.DataFrame(correlacoes, columns=["Produto 1", "Produto 2", "Correlação"])# Cria um data frame com as correlações
 
 
-print(correlacoes)
+print(df_correlacoes)
 
 Produtos = nomes[2:]
 Produtos.append("total")
 #print(Produtos)
 
-df['total'] = df[[df.columns[2], df.columns[3], df.columns[4], df.columns[5], df.columns[6], df.columns[7]]].sum(axis=1)
+df['total'] = df[[df.columns[2], df.columns[3], df.columns[4], df.columns[5], df.columns[6], df.columns[7]]].sum(axis=1) # Soma as vendas de todos os produtos
 # Inicializa a matriz com os valores calculados
 matriz_de_resultados = []
 
@@ -88,12 +91,12 @@ while True:
     # Verifica se a combinação de produtos existe em 'correlacoes'
     correl = None
     for correlacao in correlacoes:
-        if (correlacao[0] == produto1 and correlacao[1] == produto2) or (correlacao[0] == produto2 and correlacao[1] == produto1):
+        if (correlacao[0] == produto1 and correlacao[1] == produto2) or (correlacao[0] == produto2 and correlacao[1] == produto1): # Isso garante que a ordem dos produtos não importa
             correl = correlacao
             break
     
     if correl:
-        _, _, valor_correlacao = correl
+        _, _, valor_correlacao = correl # Desempacota a tupla
         plt.figure(figsize=(8, 6))
         plt.scatter(df[produto1], df[produto2], alpha=0.9)
         plt.title(f"Dispersão entre {produto1} e {produto2} (Correlação: {valor_correlacao:.4f})")
@@ -110,7 +113,7 @@ Produtos=nomes[2:] # Reinicia a linha de produtos
 
 plt.figure(figsize=(12, 6)) # Tamanho da figura
 for Produto in Produtos:
-    plt.plot(df['Mês'].astype(str) + '/' + df['Ano'].astype(str), df[Produto], label=Produto, marker='x') # Linha de qualquer produto
+    plt.plot(df['Mês'].astype(str) + '/' + df['Ano'].astype(str), df[Produto], label=Produto, marker='x') # Linha de qualquer produto, eh adicionado o mes e ano no nome do eixo x ao transformar a coluna em string
 plt.xlabel('Mês') # Nome do eixo x
 plt.ylabel('Vendas') # Nome do eixo y
 plt.title('Vendas de Produtos ao Longo do Tempo') # Nome do grafico
@@ -137,7 +140,7 @@ plt.bar(df_resultados[df_resultados['Produto'] != 'total']['Produto'], df_result
 plt.xlabel('Produto') # Nome do eixo x
 plt.ylabel('Variância') # Nome do eixo y   
 plt.title('Variância dos Produtos') # Nome do grafico
-plt.xticks(rotation=90)
+plt.xticks(rotation=0)
 plt.grid(True) # Coloca uma grade no grafico
 plt.show()
 
@@ -148,6 +151,6 @@ plt.bar(df_resultados[df_resultados['Produto'] != 'total']['Produto'], df_result
 plt.xlabel('Produto') # Nome do eixo x
 plt.ylabel('Moda') # Nome do eixo y   
 plt.title('Moda dos Produtos') # Nome do grafico
-plt.xticks(rotation=90)
+plt.xticks(rotation=0)
 plt.grid(True) # Coloca uma grade no grafico
 plt.show()
