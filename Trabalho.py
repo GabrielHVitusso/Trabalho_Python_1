@@ -1,5 +1,5 @@
 # Trabalho 1 para as Aulas de Python UFMG TTMA
-# Gabriel H Vitusso
+# Gabriel H Vitusso, Arthur Barros, Christian Soares, Silvano Lobo
 
 #Bibliotecas
 import pandas as pd
